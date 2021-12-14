@@ -22,7 +22,7 @@ import AddShop from "./Components/AddShop";
 import UpdateShop from './Components/UpdateShop';
 
 function App() {
-  const [Role, setRole] = useState("MM");
+  const [Role, setRole] = useState("");
   return (
     <div className="App">
       <Switch>

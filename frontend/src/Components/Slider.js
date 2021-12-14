@@ -27,6 +27,14 @@ export default function Slider() {
         justifyContent: "center",
         alignItems: "center"
     };
+
+    const btnStyle = {
+        width: "30vw",
+        padding: "1rem",
+        border: "none",
+        fontSize: "1.4rem"
+    }
+
     return (
         <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
             <div className="carousel-indicators">
@@ -40,7 +48,7 @@ export default function Slider() {
                     <div className="container" style={TextStyle}>
                         <h1 className='display-4'>Welcome</h1>
                         <p className='h4'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis molestias ducimus blanditiis molestiae doloribus, quia odit similique amet repellendus non.</p>
-                        <Link to={`/allMalls`} className='btn btn-lg btn-primary'>View Malls...</Link>
+                        <Link to={`/allMalls`} className='btn btn-lg btn-primary' style={btnStyle}>View Malls...</Link>
                     </div>
                 </div>
                 <div className="carousel-item">

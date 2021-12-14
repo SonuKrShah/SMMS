@@ -29,6 +29,8 @@ export default function Mall({ item, Role, setMalls }) {
                 <br />
                 <span className='h3'>Contact No : <span className='fs-4 fw-normal'>{item.C_no}</span></span>
                 <br />
+                <span className='h3'>Email ID : <span className='fs-4 fw-normal'>{item.Email_ID}</span></span>
+                <br />
                 <span className='h3'>Address : <span className='fs-4 fw-normal'>{item.Address}</span> </span>
                 <br />
                 <span className='h3'>Description - <span className='fs-4 fw-normal'>{item.Description}</span> </span>

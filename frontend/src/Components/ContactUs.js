@@ -9,6 +9,13 @@ export default function ContactUs() {
         e.preventdefault();
         setMessage(true);
     }
+    const btnStyle = {
+        width: "30vw",
+        padding: "1rem",
+        border: "none",
+        fontSize: "1.4rem"
+    }
+
     return (
         <section id="Contact" className="contact">
             <div className="container">
@@ -51,7 +58,7 @@ export default function ContactUs() {
                             </div>
 
                             {message && <div className="text-center">Your message has been sent. Thank you!</div>}
-                            <div className="text-center"><button className='btn btn-primary btn-md my-4' onSubmit={sendMessage}>Send Message</button></div>
+                            <div className="text-center"><button className='btn btn-primary btn-md my-4' style={btnStyle} onSubmit={sendMessage}>Send Message</button></div>
                         </form>
                     </div>
                 </div>

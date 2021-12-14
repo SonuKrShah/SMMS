@@ -59,6 +59,7 @@ function AddMall({ setRole, setP_id }) {
             Name: MallName,
             C_No: Mallphone,
             Address: MallAddress,
+            Email_ID: email,
             Desc: Description,
         }).then(() => {
             console.log('Success');

@@ -8,14 +8,12 @@ export default function SpecificShop() {
     const [Render, setRender] = useState(false);
     const { search } = useLocation();
 
-
     const ImgStyle = {
         width: "100%",
         borderRadius: "1rem"
     }
 
     const GetDetails = () => {
-
         console.log("Entered Details");
         const searchParams = new URLSearchParams(search);
         const Id = searchParams.get('Id');
@@ -44,14 +42,14 @@ export default function SpecificShop() {
                         <br />
                         <span className='h3'>Address : <span className='fs-4 fw-normal'>{Shop.Address}</span> </span>
                         <br />
-                        <span className='h3'>Email Id : <span className='fs-4 fw-normal'>{Shop.Address}</span> </span>
+                        <span className='h3'>Email Id : <span className='fs-4 fw-normal'>{Shop.Email}</span> </span>
                         <br />
                         <span className='h3'>Contact No : <span className='fs-4 fw-normal'>{Shop.C_no}</span> </span>
                         <br />
                     </div>
                     <div className="col">
                         {/* This contains the  image */}
-                        <img src={require('../Assets/g2.jpg').default} alt="Error" style={ImgStyle} />
+                        <img src={require(`../Assets/Shop${Shop.Shop_id % 10 + 1}.jpg`).default} alt="Error" style={ImgStyle} />
                     </div>
 
                 </div>

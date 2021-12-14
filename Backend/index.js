@@ -96,8 +96,8 @@ app.get('/signin', (req, res) => {
 // ********************************************ADD New Mall *********************************************
 // add new Malls 
 app.post('/addMall', (req, res) => {
-    const { Name, C_No, Address, Desc } = { ...req.body };
-    connection.query(`INSERT INTO \`mall\` (Name, C_no, Address, Description) VALUES ('${Name}', '${C_No}', '${Address}', '${Desc}');`,
+    const { Name, Email_ID, C_No, Address, Desc } = { ...req.body };
+    connection.query(`INSERT INTO \`mall\` (Name, C_no, Email_ID, Address, Description) VALUES ('${Name}', '${C_No}', '${Email_ID}' '${Address}', '${Desc}');`,
         function (err, result) {
             if (err) {
                 console.log(err);
@@ -218,8 +218,8 @@ app.delete('/deleteMallManager', isAdmin, (req, res) => {
 
 // ******************************************* Updates Mall Details ***********************************************
 app.post('/UpdateMall', (req, res) => {
-    const { Name, C_no, Address, Desc, Mall_id } = { ...req.body };
-    connection.query(`UPDATE \`mall\` SET Name = '${Name}', C_no = '${C_no}', Address = '${Address}', Description = '${Desc}' WHERE Mall_id = ${Mall_id};`,
+    const { Name, C_no, Email_ID, Address, Desc, Mall_id } = { ...req.body };
+    connection.query(`UPDATE \`mall\` SET Name = '${Name}', C_no = '${C_no}', Email_ID='${Email_ID}' Address = '${Address}', Description = '${Desc}' WHERE Mall_id = ${Mall_id};`,
         function (err, result) {
             if (err) {
                 console.log(err);
@@ -234,7 +234,7 @@ app.post('/UpdateMall', (req, res) => {
 
 // ************************************* Add Shops ***********************************************
 app.post('/addShop', (req, res) => {
-    console.log("Entered Updates");
+
     const { Name, C_no, Email, Address, Mall_id } = { ...req.body };
     connection.query(`INSERT INTO shops (Name, C_no, Email, Address, Mall_id) VALUES ('${Name}','${C_no}','${Email}', '${Address}', '${Mall_id}');`,
         function (err, result) {
@@ -270,7 +270,6 @@ app.delete('/deleteShop', (req, res) => {
 
 app.post('/UpdateShop', (req, res) => {
     const { Shop_id, Name, C_no, Email, Address } = { ...req.body };
-    console.log(Shop_id);
     connection.query(`UPDATE shops SET Name='${Name}', C_no='${C_no}', Email='${Email}', Address='${Address}' WHERE Shop_id='${Shop_id}';`,
         function (err, result) {
             if (err) {
@@ -359,7 +358,6 @@ app.get('/shopsmall', (req, res) => {
     })
 });
 app.get('/specificshop', (req, res) => {
-    console.log(req.query);
     connection.query(`SELECT * FROM shops WHERE Shop_id=${req.query.Id};`, function (error, result) {
         if (error)
             return res.status(404).json("")

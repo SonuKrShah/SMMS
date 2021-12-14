@@ -20,7 +20,8 @@ export default function SpecificMall({ Role }) {
 
     const ShopImgStyle = {
         width: "33vw",
-        borderRadius: "1rem"
+        borderRadius: "1rem",
+        height: "350px"
     }
 
     const { search } = useLocation();
@@ -77,14 +78,14 @@ export default function SpecificMall({ Role }) {
                         <br />
                         <span className='h3'>Address : <span className='fs-4 fw-normal'>{MallD[0].Address}</span> </span>
                         <br />
-                        <span className='h3'>Email Id : <span className='fs-4 fw-normal'>{MallD[0].Address}</span> </span>
+                        <span className='h3'>Email Id : <span className='fs-4 fw-normal'>{MallD[0].Email_ID}</span> </span>
                         <br />
                         <span className='h3'>Contact No : <span className='fs-4 fw-normal'>{MallD[0].C_no}</span> </span>
                         <br />
                     </div>
                     <div className="col">
                         {/* This contains the  image */}
-                        <img src={require('../Assets/g2.jpg').default} alt="Error" style={ImgStyle} />
+                        <img src={require(`../Assets/Mall${Id % 5 + 1}.jpg`).default} alt="Error" style={ImgStyle} />
                     </div>
                 </div>
 
@@ -97,7 +98,7 @@ export default function SpecificMall({ Role }) {
                         return <div className="row my-3">
                             <div className="col">
                                 {/* Image */}
-                                <img src={require('../Assets/g2.jpg').default} alt="Error" style={ShopImgStyle} />
+                                <img src={require(`../Assets/Shop${item.Shop_id % 5 + 1}.jpg`).default} alt="Error" style={ShopImgStyle} />
                             </div>
                             <div className="col">
                                 {/* Details */}
@@ -110,7 +111,7 @@ export default function SpecificMall({ Role }) {
                                 <br />
                                 <span className='h3'>Address : <span className='fs-4 fw-normal'>{item.Address}</span> </span>
                                 <br />
-                                <span className='h3'>Email Id : <span className='fs-4 fw-normal'>{item.Address}</span> </span>
+                                <span className='h3'>Email Id : <span className='fs-4 fw-normal'>{item.Email}</span> </span>
                                 <br />
                                 <span className='h3'>Contact No : <span className='fs-4 fw-normal'>{item.C_no}</span> </span>
                                 {/* Logic for View Details */}

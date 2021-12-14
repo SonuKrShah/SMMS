@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export default function Footer() {
 
     const FooterStyle = {
-        backgroundColor: '#333',
+        backgroundColor: 'black',
         padding: "10px",
         color: 'white'
     };

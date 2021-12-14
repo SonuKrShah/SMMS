@@ -17,18 +17,22 @@ export default function AllMalls({ Role }) {
     }, [])
 
     const ImageStyle = {
-        width: '80%'
+        width: '80%',
+        height: '400px',
+        border: "1px solid grey",
+        borderRadius: "1rem",
+        boxShadow: "0 0 5px grey"
     };
 
     return (
         <div className='container'>
-            <span className='display-2 text-center'>ALL MALLS</span>
+            <span className='display-2 text-center my-5'>ALL MALLS</span>
 
             {Malls.map((item) => {
-                return <div className="row my-5 d-flex align-items-center">
-                    <div className="col"><img src={require(`../Assets/g2.jpg`).default} style={ImageStyle} alt="Error" /></div>
+                return <div className="row my-2 d-flex align-items-center">
+                    <div className="col"><img src={require(`../Assets/Mall${item.Mall_id % 5 + 1}.jpg`).default} style={ImageStyle} alt="Error" /></div>
                     <Mall item={item} Role={Role} setMalls={setMalls} />
-                    <hr className='container' />
+                    <hr className='container my-3' />
                 </div>
             })}
         </div>

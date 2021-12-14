@@ -4,6 +4,7 @@ const cors = require('cors')
 const mysql = require('mysql2');
 
 const { isAdmin, isMallManager, isLoggedIn } = require('./MiddleWares/UtilityMiddlewares');
+const { query } = require('express');
 const PORT = 3010;
 app.use(express.json());
 app.use(cors());
@@ -27,9 +28,35 @@ connection.connect((err) => {
 
 // ********************************************LOGIN**********************************************
 app.post('/login', (req, res) => {
-    console.log(req.body);
     // Note by default the role will be empty
     connection.query(`INSERT INTO \`persons\` (Name, Age, Gender, C_No, Email_ID, Password, Address) VALUES ('${req.body.Name}', ${req.body.Age}, '${req.body.Gender}', '${req.body.C_No}','${req.body.Email_ID}','${req.body.Password}','${req.body.Address}');`,
+        function (err, result) {
+            if (err) {
+                res.status(400)     // Resource Not Found
+                return res.send("Error try again");
+            }
+            res.json(result);
+        });
+});
+
+
+// Not Using
+app.get('/mallid', (req, res) => {
+    connection.query(`SELECT P_id FROM mall_manager WHERE Mall_id=${req.query.Id};`,
+        function (err, result) {
+            if (err) {
+                res.status(400)     // Resource Not Found
+                return res.send("Error try again");
+            }
+            console.log(result.data);
+            res.json(result);
+        });
+});
+
+// Table for view
+app.get('/persons', (req, res) => {
+    // Note by default the role will be empty
+    connection.query(`SELECT * FROM persons WHERE P_id=${req.query.Id}`,
         function (err, result) {
             if (err) {
                 res.status(400)     // Resource Not Found
@@ -43,7 +70,7 @@ app.post('/login', (req, res) => {
 
 // ********************************************SIGNIN**********************************************
 app.get('/signin', (req, res) => {
-    const { Email_ID, Password } = { ...req.body };
+    const { Email_ID, Password } = { ...req.query };
     connection.query("SELECT P_id, Email_ID, Password, Role FROM `persons`;",
         function (err, result) {
             if (err) {
@@ -51,10 +78,11 @@ app.get('/signin', (req, res) => {
                 return res.status(400).send(err);
             }
             for (let i = 0; i < result.length; i++) {
-                if (result[i].Email_ID === Email_ID && result[i].Password === Password)
+                if (result[i].Email_ID == Email_ID && result[i].Password == Password) {
                     return res.json(result[i].Role);
+                }
             }
-            res.json("Customer");
+            res.json("Cus");
         }
     )
 });
@@ -65,51 +93,9 @@ app.get('/signin', (req, res) => {
 
 // *****************************############ ROLES OF ADMIN ##################************************************
 
-
-// ********************************************ADD New Admin *********************************************
-
-// Here the admin can add new Admins if he wants
-app.post('/addAdmin', isAdmin, (req, res) => {
-
-    const { Name, Age, Gender, C_No, Email_ID, Address, Password } = { ...req.body };
-    // Firstly interst into the Persons Database.
-    connection.query(`INSERT INTO \`persons\` (Name, Age, Gender, C_No, Email_ID, Password, Address, Role) VALUES ('${Name}', ${Age}, '${Gender}', '${C_No}','${Email_ID}','${Password}','${Address}', 'admin');`,
-        function (err, result) {
-            if (err) {
-                return res.status(400).send("Error Adding new Admins try again");
-            }
-            // res.send(result);
-        }
-    );
-
-    // Then add to the admin database
-    connection.query("SELECT P_id, Email_ID, Password, Role FROM `persons`;",
-        function (err, result) {
-            if (err) {
-                // Resource Not Found
-                return res.status(400).send(err);
-            }
-            for (let i = 0; i < result.length; i++) {
-                if (result[i].Email_ID === Email_ID && result[i].Password === Password) {
-                    connection.query(`INSERT INTO \`admin\` (P_id) VALUES ('${result[i].P_id}');`,
-                        function (err, result) {
-                            if (err) {
-                                return res.status(400).send(err);
-                            }
-                        }
-                    );
-                }
-            }
-            res.json("Successfully added new Admin");
-        }
-    )
-});
-// ********************************************ADD New Admin *********************************************
-
-
 // ********************************************ADD New Mall *********************************************
 // add new Malls 
-app.post('/addMall', isAdmin, (req, res) => {
+app.post('/addMall', (req, res) => {
     const { Name, C_No, Address, Desc } = { ...req.body };
     connection.query(`INSERT INTO \`mall\` (Name, C_no, Address, Description) VALUES ('${Name}', '${C_No}', '${Address}', '${Desc}');`,
         function (err, result) {
@@ -117,16 +103,14 @@ app.post('/addMall', isAdmin, (req, res) => {
                 console.log(err);
                 return res.status(400).send(err);
             }
-            res.send(result);
         }
     );
 });
 // ********************************************ADD New Mall *********************************************
 
-
 // ********************************************ADD New Mall Manager *********************************************
 
-app.post('/addMallManager', isAdmin, (req, res) => {
+app.post('/addMallManager', (req, res) => {
     const { Name, Age, Gender, C_No, Email_ID, Address, Password, Mall_id } = { ...req.body };
     // Firstly interest into the Persons Database.
     connection.query(`INSERT INTO \`persons\` (Name, Age, Gender, C_No, Email_ID, Password, Address, Role) VALUES ('${Name}', ${Age}, '${Gender}', '${C_No}','${Email_ID}','${Password}','${Address}', 'MM');`,
@@ -167,16 +151,13 @@ app.post('/addMallManager', isAdmin, (req, res) => {
     );
 });
 
-// ********************************************ADD New Mall Manager *********************************************
-
-
-
+// ********************************************ADD New Mall Manager*****************************************
 
 // ********************************************Delete Mall *********************************************
 
 // Here we will delete the mall as well as the mall manager
-app.delete('/deleteMall', isAdmin, (req, res) => {
-    const { Mall_id } = { ...req.body };
+app.delete('/deleteMall', (req, res) => {
+    const { Mall_id } = { ...req.query };
     // Deleting the Mall
     connection.query(`DELETE FROM \`mall\` WHERE Mall_id = ${Mall_id}`,
         function (err, result) {
@@ -200,12 +181,9 @@ app.delete('/deleteMall', isAdmin, (req, res) => {
                 return res.status(400).send("Couldn't Delete the Mall Data");
             }
         });
-
-    res.send("Deleted Successfully");
+    res.send("Success");
 })
 // ********************************************Delete Mall *********************************************
-
-
 
 
 // ********************************************Delete Mall Manager *********************************************
@@ -239,7 +217,7 @@ app.delete('/deleteMallManager', isAdmin, (req, res) => {
 // *****************************############ ROLES OF ADMIN ##################************************************
 
 // ******************************************* Updates Mall Details ***********************************************
-app.post('/UpdateMall', isAdmin, isMallManager, (req, res) => {
+app.post('/UpdateMall', (req, res) => {
     const { Name, C_no, Address, Desc, Mall_id } = { ...req.body };
     connection.query(`UPDATE \`mall\` SET Name = '${Name}', C_no = '${C_no}', Address = '${Address}', Description = '${Desc}' WHERE Mall_id = ${Mall_id};`,
         function (err, result) {
@@ -255,9 +233,10 @@ app.post('/UpdateMall', isAdmin, isMallManager, (req, res) => {
 // *****************************############ ROLES OF MALL MANAGER ##################************************************
 
 // ************************************* Add Shops ***********************************************
-app.post('/addShop', isMallManager, (req, res) => {
+app.post('/addShop', (req, res) => {
+    console.log("Entered Updates");
     const { Name, C_no, Email, Address, Mall_id } = { ...req.body };
-    connection.query(`INSERT INTO \`shops\` (Name, C_no, Email, Address, Mall_id) VALUES ('${Name}','${C_no}','${Email}', '${Address}', '${Mall_id}');`,
+    connection.query(`INSERT INTO shops (Name, C_no, Email, Address, Mall_id) VALUES ('${Name}','${C_no}','${Email}', '${Address}', '${Mall_id}');`,
         function (err, result) {
             if (err) {
                 console.log(err);
@@ -271,9 +250,8 @@ app.post('/addShop', isMallManager, (req, res) => {
 
 
 // ************************************* Remove Shops ***********************************************
-app.delete('/deleteShop', (isMallManager, (req, res) => {
-    const { Shop_id } = { ...req.body };
-    console.log(Shop_id);
+app.delete('/deleteShop', (req, res) => {
+    const { Shop_id } = { ...req.query };
     connection.query(`DELETE FROM \`shops\` WHERE Shop_id = ${Shop_id}`,
         function (err, result) {
             if (err)
@@ -283,16 +261,17 @@ app.delete('/deleteShop', (isMallManager, (req, res) => {
         }
     );
 
-}))
+})
 // ************************************* Remove Shops ***********************************************
 
 // ************************************* Update Shop Details ***********************************************
 
 // Only the mall manager can update this
 
-app.post('/UpdateShops', isMallManager, (req, res) => {
+app.post('/UpdateShop', (req, res) => {
     const { Shop_id, Name, C_no, Email, Address } = { ...req.body };
-    connection.query(`UPDATE \`shops\` SET Name = '${Name}', C_no = '${C_no}', Email = '${Email}', Address = '${Address}' WHERE Shop_id = ${Shop_id};`,
+    console.log(Shop_id);
+    connection.query(`UPDATE shops SET Name='${Name}', C_no='${C_no}', Email='${Email}', Address='${Address}' WHERE Shop_id='${Shop_id}';`,
         function (err, result) {
             if (err) {
                 console.log(err);
@@ -321,7 +300,7 @@ app.post('/EditProfile', isLoggedIn, (req, res) => {
 
 // ********************************** Reading the Data from the database *********************************
 
-app.get("/AllPersons", isAdmin, (req, res) => {
+app.get("/AllPersons", (req, res) => {
     connection.query(`SELECT * FROM \'persons\'`, function (error, result) {
         if (error)
             return res.status(404).json("")
@@ -329,10 +308,28 @@ app.get("/AllPersons", isAdmin, (req, res) => {
     })
 })
 
+// Get List of all Malls
+
 app.get('/malls', (req, res) => {
-    connection.query(`SELECT * FROM \'mall\'`, function (error, result) {
+    connection.query("SELECT * FROM mall;", function (error, result) {
         if (error)
-            return res.status(404).json("")
+            return res.status(404).send("Data not found")
+        res.json(result);
+    })
+})
+
+app.get('/lastAdded', (req, res) => {
+    const { Name } = { ...req.body };
+    connection.query(`SELECT Mall_id FROM mall WHERE Name='${Name}';`, function (error, result) {
+        if (error)
+            return res.status(404).send("Data not found")
+        res.json(result);
+    })
+})
+app.get('/specificmall', (req, res) => {
+    connection.query(`SELECT * FROM mall WHERE Mall_id=${req.query.Id};`, function (error, result) {
+        if (error)
+            return res.status(404).send("Data not found")
         res.json(result);
     })
 })
@@ -346,13 +343,31 @@ app.get('/mallManagers', (req, res) => {
 })
 
 app.get('/Shops', (req, res) => {
+
     connection.query(`SELECT * FROM \'shops\'`, function (error, result) {
         if (error)
             return res.status(404).json("")
         res.json(result);
     })
 });
+app.get('/shopsmall', (req, res) => {
+    connection.query(`SELECT * FROM shops WHERE Mall_id=${req.query.Id};`, function (error, result) {
+        if (error)
+            return res.status(404).json("")
+        console.log(result);
+        res.json(result);
+    })
+});
+app.get('/specificshop', (req, res) => {
+    console.log(req.query);
+    connection.query(`SELECT * FROM shops WHERE Shop_id=${req.query.Id};`, function (error, result) {
+        if (error)
+            return res.status(404).json("")
+        res.json(result);
+    })
+});
 
+// Not using
 app.get('/ShopOwners', (req, res) => {
     connection.query(`SELECT * FROM \'shops\'`, function (error, result) {
         if (error)
@@ -360,9 +375,6 @@ app.get('/ShopOwners', (req, res) => {
         res.json(result);
     })
 });
-
-
-
 app.listen(PORT, () => {
     console.log('Server has started...');
 });

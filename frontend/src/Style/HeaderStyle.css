@@ -1,0 +1,16 @@
+.navbar a:not(.navbar-brand) {
+  color: red;
+  font-size: 1rem;
+  transition: all 0.5s ease;
+  border-radius: 1rem;
+  /* padding: 0 10px; */
+  padding: 5px 15px 7px 15px;
+  margin-left: 5px;
+  font-size: 16px;
+}
+a:hover {
+  background: #ef6603;
+  border-radius: 1rem;
+  color: white !important;
+  transform: scale(1.1);
+}

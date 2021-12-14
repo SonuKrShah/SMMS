@@ -1,0 +1,16 @@
+.social-links {
+  margin: auto;
+  width: 30vh;
+  display: flex;
+  justify-content: space-between;
+  font-size: 2rem;
+}
+
+.social-links a {
+  transition: all 0.5s ease;
+}
+
+.social-links a:hover {
+  transform: rotate(360deg);
+  background-color: #333;
+}

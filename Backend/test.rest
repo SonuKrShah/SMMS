@@ -1,11 +1,7 @@
-POST  http://localhost:3010/UpdateShops
+GET  http://localhost:3010/specificshop?Id=5
 Content-Type: application/json
 
 {
-    "user": "MM",
-    "Name": "Reliance",
-    "C_no": "2222222222",
-    "Email": "this@this.com",
-    "Address": "Hello World",
-    "Shop_id": 2
+    "Name": "Big Bazar"
 }
+
